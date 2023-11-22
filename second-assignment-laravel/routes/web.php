@@ -16,6 +16,17 @@ use App\Http\Controllers\QuizController;
 
 Route::get('/', [QuizController::class, 'index']);
 
+Route::get('/quizzes', [QuizController::class, 'quizzes'])->name('quizzes.index');
+
+Route::get("/subscribe", function(Request $request) {
+    return view('subscribe');
+})->name('subscribe.index');
+
+Route::get('/quizzes/{id}/edit', [QuizController::class, 'createOrEdit'])->name('quizzes.edit');
+Route::get('/quizzes/create', [QuizController::class, 'createOrEdit'])->name('quizzes.create');
+
+Route::post('/quizzes', [QuizController::class, 'store'])->name('quizzes.store');
+Route::put('/quizzes/{quiz}', [QuizController::class, 'update'])->name('quizzes.update');
 
 Route::post('/subscribe', function (Request $request) {
     
