@@ -17,7 +17,28 @@ class QuizController extends Controller
 
     public function quizzes()
     {
-        $quizzes = Quiz::All();
+       
+        $quizzesWithPhotos = Quiz::where('status', 1)
+            ->whereNotNull('photo_path')
+            ->orderBy('created_at', 'desc')
+            ->take(8)
+            ->get();
+
+        $remainingQuizzesCount = 8 - $quizzesWithPhotos->count();
+
+        if ($remainingQuizzesCount > 0) {
+            $quizzesWithDescriptions = Quiz::where('status', 1)
+                ->whereNull('photo_path')
+                ->whereNotNull('description')
+                ->orderBy('created_at', 'desc')
+                ->take($remainingQuizzesCount)
+                ->get();
+
+            $quizzes = $quizzesWithPhotos->merge($quizzesWithDescriptions);
+        } else {
+            $quizzes = $quizzesWithPhotos;
+        }
+
         return view("quizzes", compact('quizzes'));
     }
 
